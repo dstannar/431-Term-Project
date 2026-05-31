@@ -14,7 +14,7 @@ top_diameter = 3.65       # in
 P = 5.0                   # lbf, applied static load / dropped weight
 drop_height = 10.0        # in
 
-k_leg = 10.0              # lbf/in, spring coeff of one leg
+k_leg = 975.38 * 0.00571015  # lbf/in, spring coeff of one leg
 
 
 # angle of leg
