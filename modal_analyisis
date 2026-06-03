@@ -24,9 +24,9 @@ disp_m = disp_in * 0.0254
 n_paths = 8
 
 # Mass inputs, kg
-m_top = 0.050 # kg, top ring/disk mass
+m_top = 0.059 # kg, top ring/disk mass
 m_middle = 0.075 # kg, middle ring mass
-m_spring = 0.010 # kg, mass of one spring segment
+m_spring = 0.064 # kg, mass of one spring segment
 
 
 # stiffness
