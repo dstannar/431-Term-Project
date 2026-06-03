@@ -1,0 +1,72 @@
+import numpy as np
+
+# Static test data from ben
+force_N = np.array([0, 5, 10, 15, 20, 25, 30, 35, 40, 45, 50])
+
+disp_in = np.array([
+    0,
+    0.0625,
+    0.1875,
+    0.3125,
+    0.4375,
+    0.5000,
+    0.6250,
+    0.6875,
+    0.8125,
+    0.9375,
+    1.0625
+])
+
+# displacement to meters
+disp_m = disp_in * 0.0254
+
+# Geometry
+n_paths = 8
+
+# Mass inputs, kg
+m_top = 0.050 # kg, top ring/disk mass
+m_middle = 0.075 # kg, middle ring mass
+m_spring = 0.010 # kg, mass of one spring segment
+
+
+# stiffness
+# Fit force = K_global * displacement + intercept
+K_global, intercept = np.polyfit(disp_m, force_N, 1)
+
+# For 8 paths, two identical spring segments in series
+# K_global = 4*k_s
+k_s = K_global / 4.0
+
+
+# stiffness matrix
+K = n_paths * np.array([
+    [ k_s,   -k_s],
+    [-k_s,  2*k_s]
+])
+
+
+# mass matrix
+
+# Half of each upper spring moves with top ring
+m_T = m_top + n_paths * 0.5 * m_spring
+
+# Half of each upper spring and half of each lower spring move with middle ring
+m_M = m_middle + n_paths * m_spring
+
+M = np.array([
+    [m_T, 0.0],
+    [0.0, m_M]
+])
+
+eigvals, modes = np.linalg.eig(np.linalg.inv(M) @ K)
+
+# lowest to highest natural frequency
+idx = np.argsort(eigvals)
+eigvals = eigvals[idx]
+modes = modes[:, idx]
+
+omegas = np.sqrt(eigvals)
+freqs_Hz = omegas / (2.0 * np.pi)
+
+print(f"Fundamental frequency = {freqs_Hz[0]} Hz")
+print(f"Second natural frequency = {freqs_Hz[1]} Hz")
